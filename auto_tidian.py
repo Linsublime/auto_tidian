@@ -26,24 +26,30 @@ def had_simulation(content):
                 rate_h = tmp.get('3', 0) / n_sum
                 if rate_a > 0.7:
                     content += '<p>' + text + u"负的概率高达%.2f%%。" % (rate_a * 100) + '</p>'
+                    cursor.execute("UPDATE forecast_result SET had_result=%s WHERE data_id=%s ", ('a', result[i][1],))
                     print('<p>' + result[i][9] + text + u"负的概率高达%.2f%%" % (rate_a * 100)) + '</p>'
                 elif rate_d > 0.7:
                     content += '<p>' + text + u"平的概率高达%.2f%%。" % (rate_d * 100) + '</p>'
+                    cursor.execute("UPDATE forecast_result SET had_result=%s WHERE data_id=%s ", ('d', result[i][1],))
                     print('<p>' + result[i][9] + text + u"平的概率高达%.2f%%" % (rate_d * 100)) + '</p>'
                 elif rate_h > 0.7:
                     content += '<p>' + text + u"胜的概率高达%.2f%%。" % (rate_h * 100) + '</p>'
+                    cursor.execute("UPDATE forecast_result SET had_result=%s WHERE data_id=%s ", ('h', result[i][1],))
                     print('<p>' + result[i][9] + text + u"胜的概率高达%.2f%%" % (rate_h * 100)) + '</p>'
                 elif rate_a + rate_d > 0.7:
                     if not (1.01 < min(a, d) < 2.0):
                         content += '<p>' + text + u"负/平的概率高达%.2f%%。" % ((rate_a + rate_d) * 100) + '</p>'
+                        cursor.execute("UPDATE forecast_result SET had_result=%s WHERE data_id=%s ", ('a,d', result[i][1],))
                         print('<p>' + result[i][9] + text + u"负/平的概率高达%.2f%%" % ((rate_a + rate_d) * 100)) + '</p>'
                 elif rate_h + rate_d > 0.7:
                     if not (1.01 < min(d, h) < 2.0):
                         content += '<p>' + text + u"胜/平的概率高达%.2f%%。" % ((rate_h + rate_d) * 100) + '</p>'
+                        cursor.execute("UPDATE forecast_result SET had_result=%s WHERE data_id=%s ", ('d,h', result[i][1],))
                         print('<p>' + result[i][9] + text + u"胜/平的概率高达%.2f%%" % ((rate_h + rate_d) * 100)) + '</p>'
                 elif rate_a + rate_h > 0.7:
                     if not (1.01 < min(a, h) < 2.0):
                         content += '<p>' + text + u"胜/负的概率高达%.2f%%。" % ((rate_a + rate_h) * 100) + '</p>'
+                        cursor.execute("UPDATE forecast_result SET had_result=%s WHERE data_id=%s ", ('a,h', result[i][1],))
                         print('<p>' + result[i][9] + text + u"胜/负的概率高达%.2f%%" % ((rate_a + rate_h) * 100)) + '</p>'
     return content
 
@@ -69,24 +75,30 @@ def hhad_simulation(content):
                 rate_h = tmp.get('3', 0) / n_sum
                 if rate_a > 0.7:
                     content += '<p>' + text + u"让球负的概率高达%.2f%%。" % (rate_a * 100) + '</p>'
+                    cursor.execute("UPDATE forecast_result SET hhad_result=%s WHERE data_id=%s ", ('a', result[i][1],))
                     print('<p>' + result[i][9] + text + u"让球负的概率高达%.2f%%" % (rate_a * 100)) + '</p>'
                 elif rate_d > 0.7:
                     content += '<p>' + text + u"让球平的概率高达%.2f%%。" % (rate_d * 100) + '</p>'
+                    cursor.execute("UPDATE forecast_result SET hhad_result=%s WHERE data_id=%s ", ('d', result[i][1],))
                     print('<p>' + result[i][9] + text + u"让球平的概率高达%.2f%%" % (rate_d * 100)) + '</p>'
                 elif rate_h > 0.7:
                     content += '<p>' + text + u"让球胜的概率高达%.2f%%。" % (rate_h * 100) + '</p>'
+                    cursor.execute("UPDATE forecast_result SET hhad_result=%s WHERE data_id=%s ", ('h', result[i][1],))
                     print('<p>' + result[i][9] + text + u"让球胜的概率高达%.2f%%" % (rate_h * 100)) + '</p>'
                 elif rate_a + rate_d > 0.7:
                     if not (1.01 < min(a, d) < 2.0):
                         content += '<p>' + text + u"让球负/平的概率高达%.2f%%。" % ((rate_a + rate_d) * 100) + '</p>'
+                        cursor.execute("UPDATE forecast_result SET hhad_result=%s WHERE data_id=%s ", ('a,d', result[i][1],))
                         print('<p>' + result[i][9] + text + u"让球负/平的概率高达%.2f%%" % ((rate_a + rate_d) * 100)) + '</p>'
                 elif rate_h + rate_d > 0.7:
                     if not (1.01 < min(d, h) < 2.0):
                         content += '<p>' + text + u"让球胜/平的概率高达%.2f%%。" % ((rate_h + rate_d) * 100) + '</p>'
+                        cursor.execute("UPDATE forecast_result SET hhad_result=%s WHERE data_id=%s ", ('d,h', result[i][1],))
                         print('<p>' + result[i][9] + text + u"让球胜/平的概率高达%.2f%%" % ((rate_h + rate_d) * 100)) + '</p>'
                 elif rate_a + rate_h > 0.7:
                     if not (1.01 < min(a, h) < 2.0):
                         content += '<p>' + text + u"让球胜/负的概率高达%.2f%%。" % ((rate_a + rate_h) * 100) + '</p>'
+                        cursor.execute("UPDATE forecast_result SET hhad_result=%s WHERE data_id=%s ", ('a,h', result[i][1],))
                         print('<p>' + result[i][9] + text + u"让球胜/负的概率高达%.2f%%" % ((rate_a + rate_h) * 100)) + '</p>'
     return content
 
@@ -120,6 +132,7 @@ def hafu_simulation(content):
                 for key, value in a_rate_dict.items():
                     if value > .5:
                         content += '<p>' + text + u'''%s的概率高达%.2f%%。''' % (a_dict[str(key)], value * 100) + '</p>'
+                        cursor.execute("UPDATE forecast_result SET half_final_result=%s WHERE data_id=%s ", (str(key)[-2:], result[i][1],))
                         print('<p>' + result[i][9] + text + u'''%s的概率高达%.2f%%''' % (a_dict[str(key)], value * 100)) + '</p>'
     return content
 
@@ -153,6 +166,7 @@ def ttg_simulation(content):
                     count_text += t[0]
                     if rate > .5:
                         content += '<p>' + text + u'''总进球数为%s的概率高达%.2f%%。''' % (count_text, rate * 100) + '</p>'
+                        cursor.execute("UPDATE forecast_result SET final_count=%s WHERE data_id=%s ", (count_text, result[i][1],))
                         print('<p>' + result[i][9] + text + u'''总进球数为%s的概率高达%.2f%%.''' % (count_text, rate * 100)) + '</p>'
                         break
                     count_text += '/'
@@ -167,6 +181,7 @@ cursor.execute("SELECT * FROM sporttery_baseinfo WHERE (date = Date(now()) AND t
                "OR date > Date(now()) ORDER BY data_id")
 result = cursor.fetchall()
 for i in xrange(len(result)):
+    cursor.execute("INSERT INTO forecast_result (data_id) VALUES (%s)", (result[i][1],))
     content = ''
     content = had_simulation(content)
     content = hhad_simulation(content)
@@ -174,9 +189,12 @@ for i in xrange(len(result)):
     content = ttg_simulation(content)
     cursor.execute("SELECT * FROM tidian WHERE data_id = %s", result[i][1])
     tmp = cursor.fetchone()
-    if not tmp and content != '':
-        cursor.execute(
-            "INSERT INTO tidian (data_id,num,date,tidianType10,content10,Team10,createUser,tidianStatus) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",
-            (result[i][1], result[i][9], result[i][4], '3', content, '1', '3', '4'))
+    if content != '':
+        if not tmp:
+            cursor.execute(
+                "INSERT INTO tidian (data_id,num,date,tidianType10,content10,Team10,createUser,tidianStatus) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",
+                (result[i][1], result[i][9], result[i][4], '3', content, '1', '3', '4'))
         conn.commit()
+    else:
+        conn.rollback()
 conn.close()
