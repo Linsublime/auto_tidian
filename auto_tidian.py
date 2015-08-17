@@ -181,23 +181,20 @@ cursor.execute("SELECT * FROM sporttery_baseinfo WHERE (date = Date(now()) AND t
                "OR date > Date(now()) ORDER BY data_id")
 result = cursor.fetchall()
 for i in xrange(len(result)):
-    cursor.execute("SELECT * FROM forecast_result WHERE data_id = %s", result[i][1])
+    cursor.execute("INSERT INTO forecast_result (data_id) VALUES (%s)", (result[i][1],))
+    content = ''
+    content = had_simulation(content)
+    content = hhad_simulation(content)
+    content = hafu_simulation(content)
+    content = ttg_simulation(content)
+    cursor.execute("SELECT * FROM tidian WHERE data_id = %s", result[i][1])
     tmp = cursor.fetchone()
-    if not tmp:
-        cursor.execute("INSERT INTO forecast_result (data_id) VALUES (%s)", (result[i][1],))
-        content = ''
-        content = had_simulation(content)
-        content = hhad_simulation(content)
-        content = hafu_simulation(content)
-        content = ttg_simulation(content)
-        cursor.execute("SELECT * FROM tidian WHERE data_id = %s", result[i][1])
-        tmp = cursor.fetchone()
-        if content != '':
-            if not tmp:
-                cursor.execute(
-                  "INSERT INTO tidian (data_id,num,date,tidianType10,content10,Team10,createUser,tidianStatus) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",
-                  (result[i][1], result[i][9], result[i][4], '3', content, '1', '3', '4'))
+    if content != '':
+        if not tmp:
+            cursor.execute(
+              "INSERT INTO tidian (data_id,num,date,tidianType10,content10,Team10,createUser,tidianStatus) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",
+              (result[i][1], result[i][9], result[i][4], '1', content, '1', '3', '4'))
             conn.commit()
-        else:
-            conn.rollback()
+    else:
+        conn.rollback()
 conn.close()

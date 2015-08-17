@@ -36,7 +36,14 @@ class Mail_Model:
 mailto_list=["yu@oddsfair.cn","362731546@qq.com","f@oddsfair.cn" ]
  
 mail = Mail_Model()
-if mail.send_mail(mailto_list,datetime.datetime.now().strftime('%Y-%m-%d')+ ' 自动生成提点',os.popen('python auto_tidian.py').read()):
-    print "发送成功"
-else:
-    print "发送失败"
+i = 0
+while True:
+    result = mail.send_mail(mailto_list,datetime.datetime.now().strftime('%Y-%m-%d')+ ' 自动生成提点',os.popen('python auto_tidian.py').read())
+    if result:
+        print "发送成功"
+        break
+    elif i > 3:
+        print "发送失败"
+        break
+    else:
+        i+=1
