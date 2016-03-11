@@ -1,13 +1,13 @@
 # coding=utf-8
 __author__ = 'yuxiaorui'
+import os
+
 import MySQLdb
 
-db = MySQLdb.connect(
-    host='localhost',
-    db='oddsfair',
-    user='root',
-    passwd='',
-    charset='utf8', )
+DB_USER = os.environ['DB_USER']
+DB_PASS = os.environ['DB_PASS']
+
+db = MySQLdb.connect('mysql.master.localdomain', DB_USER, DB_PASS, "oddsfair", charset="utf8")
 tx = db.cursor(MySQLdb.cursors.DictCursor)
 # tx.execute("select * from tidian where data_id = 70413 ")
 tx.execute("select * from tidian where gamebrief = '' or isnull(gamebrief)")

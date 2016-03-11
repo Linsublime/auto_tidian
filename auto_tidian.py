@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # coding=utf-8
 from __future__ import division
+
+import os
+
 __author__ = 'root'
 
 
@@ -12,6 +15,19 @@ import MySQLdb
 import numpy as py
 import sqlalchemy
 import pandas as pd
+
+
+DB_USER = os.environ['DB_USER']
+DB_PASS = os.environ['DB_PASS']
+
+DATABASES = {
+    'default': {
+        'USER': DB_USER,
+        'PASSWORD': DB_PASS,
+        'HOST': 'mysql.master.localdomain',
+        'PORT': '3306',
+    },
+}
 
 def had_simulation(content):
     rate = rate_table[rate_table['data_id'] == data_id]
@@ -166,10 +182,10 @@ def ttg_simulation(content):
 
 # text = u'  按照爱竞彩的初盘统计系统，在相似竞彩奖金的情况下，本场比赛'
 text = u'爱竞彩初盘统计'
-conn = MySQLdb.connect('192.168.100.2', 'root', 'root', 'oddsfair', charset="utf8")
+conn = MySQLdb.connect('mysql.master.localdomain', DB_USER, DB_PASS, "oddsfair", charset="utf8")
 cursor = conn.cursor()
 
-engine = sqlalchemy.create_engine('mysql://root:root@192.168.100.2/?charset=utf8')
+engine = sqlalchemy.create_engine('mysql://%(USER)s:%(PASSWORD)s@%(HOST)s:%(PORT)s/?charset=utf8' % (DATABASES['default']),)
 match_table = pd.read_sql(
     u"SELECT data_id,num,date FROM oddsfair.sporttery_baseinfo WHERE (date = Date(now()) AND time>Time(now())) "
     "OR date > Date(now()) ORDER BY data_id", engine, )
