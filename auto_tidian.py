@@ -11,11 +11,13 @@ import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
+from mongoengine.context_managers import switch_db
 import MySQLdb
 import numpy as py
 import sqlalchemy
 import pandas as pd
 
+from models import *
 
 DB_USER = os.environ['DB_USER']
 DB_PASS = os.environ['DB_PASS']
@@ -214,6 +216,14 @@ for i in xrange(len(match_table)):
         elif not tmp[0]:
             cursor.execute("UPDATE tidian SET content9=%s,tidianType9=1,Team9=1 WHERE data_id=%s ", (content, data_id,))
             conn.commit()
+        if (not tmp) or (not tmp[0]):
+            with switch_db(TidianContent, db_alias='od') as tdc:
+                t = tdc.objects(data_id=data_id).first()
+                if not t:
+                    t = tdc(data_id=data_id, contents=TdContents())
+                t.contents.type1 = content
+                t.save()
     else:
         conn.rollback()
 conn.close()
+mgdb.close()
